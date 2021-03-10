@@ -10,34 +10,37 @@
 
 (function() {
     'use strict';
-    function bruh() {
-        // const bruh = document.getElementById('checkallonpage');
-        const checkbox = document.querySelectorAll('input[type=checkbox]');
-        checkbox.forEach((item, index) => {
-            item.click();
-        });
-        var value = 'bulkchange.php?plugin=manual&operation=deleteselectedusers'
-        document.getElementById('formactionid').value = value;
+    // https://github.com/isbrqu/toihack/raw/main/lazosjs/select.user.js
+    function checkAndDelete() {
+        console.log('checkAndDelete');
+        const tag = document.querySelector('span[role=listitem][data-value="4:5"]');
+        if (tag) {
+            const checkbox = document.querySelectorAll('input[type=checkbox]');
+            checkbox.forEach((item, index) => {item.click();});
+            const selectOperation = document.getElementById('formactionid');
+            selectOperation.value = 'bulkchange.php?plugin=manual&operation=deleteselectedusers';
+            const deleteButton = document.getElementById('participantsform');
+            deleteButton.submit();
+        } else {
+            setTimeout(checkAndDelete, 500);
+        }
     }
+
     function pollDOM () {
-        console.log('intento n');
+        console.log('pollDOM');
         const select = document.getElementsByName('unified-filters[]')[0];
         if (select) {
             if (document.URL.indexOf('contextid=') != -1) {
-                console.log('esperando un cacho');
-                setTimeout(function(){}, 7000);
-                console.log('termine de esperar');
-                if (document.querySelector('span[role=listitem][data-value="Rol: Estudiante"]')) {
-                    bruh();
-                }
-                // document.getElementById('participantsform').submit();
+                checkAndDelete();
             } else {
                 select.value = '4:5';
                 document.querySelector('form[method=post]').submit();
-           }
+            }
         } else {
-            setTimeout(pollDOM, 600);
+            setTimeout(pollDOM, 500);
         }
     }
+
     pollDOM();
+
 })();
